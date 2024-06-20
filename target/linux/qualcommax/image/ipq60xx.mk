@@ -12,9 +12,9 @@ endef
 TARGET_DEVICES += 8devices_mango-dvk
 
 define Device/EmmcImage
-	IMAGES += factory.bin sysupgrade.bin
-	IMAGE/factory.bin := append-rootfs | pad-rootfs | pad-to 64k
-	IMAGE/sysupgrade.bin/squashfs := append-rootfs | pad-to 64k | sysupgrade-tar rootfs=$$$$@ | append-metadata
+	IMAGES := factory.bin recovery.bin sysupgrade.bin
+	IMAGE/factory.bin := append-kernel | pad-to 12288k | append-rootfs | append-metadata
+	IMAGE/recovery.bin := append-kernel | pad-to 6144k | append-rootfs | append-metadata
 endef
 
 define Device/glinet_gl-ax1800
@@ -56,9 +56,22 @@ define Device/jdc_ax1800-pro
 	DEVICE_PACKAGES := ipq-wifi-jdc_ax1800-pro kmod-fs-ext4 mkf2fs f2fsck kmod-fs-f2fs
 	BLOCKSIZE := 64k
 	KERNEL_SIZE := 6144k
-	IMAGE/factory.bin := append-kernel | pad-to $${KERNEL_SIZE}  |  append-rootfs | append-metadata
 endef
 TARGET_DEVICES += jdc_ax1800-pro
+
+define Device/jdc_ax6600
+	$(call Device/FitImage)
+	$(call Device/EmmcImage)
+	DEVICE_VENDOR := JD Cloud
+	DEVICE_MODEL := JDC AX6600
+	DEVICE_DTS_CONFIG := config@cp03-c3
+	DEVICE_DTS := ipq6010-jdc-ax6600
+	SOC := ipq6010
+	DEVICE_PACKAGES := ipq-wifi-jdcloud_ax6600 kmod-ath11k-pci ath11k-firmware-qcn9074
+	BLOCKSIZE := 64k
+	KERNEL_SIZE := 6144k
+endef
+TARGET_DEVICES += jdc_ax6600
 
 define Device/netgear_wax214
        $(call Device/FitImage)
@@ -96,7 +109,6 @@ define Device/redmi_ax5-jdcloud
 	DEVICE_PACKAGES := ipq-wifi-redmi_ax5-jdcloud
 	#BLOCKSIZE := 64k
 	KERNEL_SIZE := 6144k
-	IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) | append-rootfs | append-metadata
 endef
 TARGET_DEVICES += redmi_ax5-jdcloud
 

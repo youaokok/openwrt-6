@@ -104,6 +104,7 @@ apply_nss_config() {
     xiaomi,ax9000 | \
     yuncore,ax880 | \
     zyxel,nbg7815 | \
+    jdc,ax6600 | \
     1g*)
       extra_pbuf_core0=10000000 n2h_high_water_core0=72512 n2h_wifi_pool_buf=36864 apply_sysctl
       ;;
